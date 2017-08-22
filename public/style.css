@@ -26,16 +26,27 @@
 }
 
 .input-edit {
+  display: none;
   min-width: 300px;
   max-width: 300px;
   text-align: center;
 }
 
+
+.input-edit:focus {
+  text-align: left;
+}
 .btn {
   max-width: 80px;
 }
 
-.btn-edit, .btn-success {
+.btn-success {
+  display: none;
+  margin-left: .5em;
+  background: green;
+}
+
+.btn-edit  {
   margin-left: .5em;
 }
 

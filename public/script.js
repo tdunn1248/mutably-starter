@@ -1,5 +1,4 @@
 const baseURL = 'https://mutably.herokuapp.com'
-const inputField = document.createElement('input')
 const saveBtn = document.createElement('button')
 saveBtn.classList.add('btn-success')
 saveBtn.classList.add('btn')
@@ -11,33 +10,47 @@ $(document).ready(function() {
   getPokemon()
   editButtonEventListener()
   deleteButtonEventListener()
+  saveEditEventListener()
+
 })
 
+
+
+// Event Listeners
 function editButtonEventListener() {
   $(document).on('click', '.btn-edit', function(event) {
-    console.dir(this.nextSibling.nextSibling);
-    toggleInputField(this.nextSibling.nextSibling)
-    toggleEditButton(this)
+    let pokemonInfo = $(this.parentNode).find('p')
+    let input = $(this.parentNode).find('input')
+    $(this).hide()
+    $(this.parentNode.children[0]).show()
+    pokemonInfo.hide()
+    input.show()
+    $(this.parentNode).find('input').attr('placeholder', pokemonInfo[0].innerHTML )
   })
 }
 
 function deleteButtonEventListener() {
   $(document).on('click', '.btn-delete', function() {
-    this.parentNode.remove()
+    $(this.parentNode).remove()
   })
 }
 
-function toggleInputField(editSelectedPokemon) {
-  inputField.classList.add('input-edit')
-  console.dir(inputField)
-  $(editSelectedPokemon).replaceWith(inputField)
-  $(inputField).attr('placeholder', editSelectedPokemon.innerHTML)
+function saveEditEventListener() {
+  $(document).on('click', '.btn-success', function() {
+    const input = $(this).siblings('input')
+    const p = $(this).siblings('p')
+    const updatedInfo = input.val()
+    p[0].innerHTML = updatedInfo
+    input.hide()
+    $(this).hide()
+    p.show()
+    $(this.parentNode.children[1]).show()
+  })
 }
 
-function toggleEditButton(btnSelected) {
-  $(btnSelected).replaceWith(saveBtn)
-}
 
+
+// ajax call to obtain pokemon
 function getPokemon() {
   $.ajax({
     method: 'GET',
@@ -45,13 +58,15 @@ function getPokemon() {
     success: renderPokemon
   })
 }
-
+// render pokemon
 function renderPokemon(pokemonCollection) {
   const pokemonArray = pokemonCollection.pokemon
   pokemonArray.forEach(pokemon => {
     $(".list-group").append(`
       <div class='list-item'>
+        <button class='btn btn-info btn-sm btn-success' value=${pokemon._id}>Save</button>
         <button class='btn btn-info btn-sm btn-edit' value=${pokemon._id}>Edit</button>
+        <input class='input-edit'/>
         <p class='pokemon-info'>${pokemon.name}, ${pokemon.pokedex}, ${pokemon.evolves_from}</p>
         <button class='btn btn-danger btn-sm btn-delete' value=${pokemon._id}>Delete</button>
       </div>
