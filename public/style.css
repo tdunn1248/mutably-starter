@@ -1,1 +1,44 @@
-/*Custom styles here*/
+.panel-heading {
+  margin-bottom: .5em;
+}
+
+.list-group {
+  display: flex;
+  list-style-type: none;
+  flex-direction: column;
+}
+
+.list-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: .5em;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-item p {
+  flex: 3;
+  text-align: center;
+}
+
+.list-item button {
+  flex: 1;
+}
+
+.input-edit {
+  min-width: 300px;
+  max-width: 300px;
+  text-align: center;
+}
+
+.btn {
+  max-width: 80px;
+}
+
+.btn-edit, .btn-success {
+  margin-left: .5em;
+}
+
+.btn-delete {
+  margin-right: .5em;
+}
