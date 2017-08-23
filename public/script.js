@@ -8,6 +8,7 @@ saveBtn.innerHTML = 'Save'
 $(document).ready(function() {
 
   getPokemon()
+  
   editButtonEventListener()
   deleteButtonEventListener()
   saveEditEventListener()
@@ -15,7 +16,6 @@ $(document).ready(function() {
 })
 
 // =================== ajax calls ===================== //
-// create pokemon
 function createPokemon(pokemon) {
   $.ajax({
     method: 'POST',
@@ -24,7 +24,7 @@ function createPokemon(pokemon) {
     success: getPokemon
   })
 }
-// read all pokemon
+
 function getPokemon() {
   $.ajax({
     method: 'GET',
@@ -33,7 +33,6 @@ function getPokemon() {
   })
 }
 
-// data coming back as rendering undefined
 function updatePokemon(id, pokeinfo) {
   $.ajax({
     method: 'PUT',
@@ -51,7 +50,7 @@ function deletePokemon(id) {
   })
 }
 
-// =================== render to DOM ===================== //
+// =================== render pokemon to DOM ===================== //
 function renderPokemon(pokemonCollection) {
   const pokemonArray = pokemonCollection.pokemon
   pokemonArray.forEach(pokemon => {
@@ -114,6 +113,7 @@ function addPokemonEventListener() {
   })
 }
 
+// ======= helper function ==== //
 function resetInputs() {
   $('.submit-name').val('')
   $('.submit-pokedex').val('')
