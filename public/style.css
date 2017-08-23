@@ -1,3 +1,19 @@
+.form-control {
+  margin-right: 1em;
+  margin-bottom: .5em;
+}
+
+.form-group {
+  display: flex;
+  max-width: 730px;
+  flex-direction: column;
+  text-align: center;
+  margin: 0;
+}
+
+.add-pokemon-btn {
+  margin-bottom: .5em;
+}
 .panel-heading {
   margin-bottom: .5em;
 }

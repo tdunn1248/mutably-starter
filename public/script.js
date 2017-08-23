@@ -11,12 +11,63 @@ $(document).ready(function() {
   editButtonEventListener()
   deleteButtonEventListener()
   saveEditEventListener()
-
+  addPokemonEventListener()
 })
 
+// =================== ajax calls ===================== //
+// create pokemon
+function createPokemon(pokemon) {
+  $.ajax({
+    method: 'POST',
+    url: `${baseURL}/pokemon`,
+    data: pokemon,
+    success: getPokemon
+  })
+}
+// read all pokemon
+function getPokemon() {
+  $.ajax({
+    method: 'GET',
+    url: `${baseURL}/pokemon`,
+    success: renderPokemon
+  })
+}
 
+// data coming back as rendering undefined
+function updatePokemon(id, pokeinfo) {
+  $.ajax({
+    method: 'PUT',
+    url: `${baseURL}/pokemon/${id}`,
+    data: JSON.stringify(pokeinfo),
+    success: getPokemon
+  })
+}
 
-// Event Listeners
+function deletePokemon(id) {
+  $.ajax({
+    method: 'DELETE',
+    url: `${baseURL}/pokemon/${id}`,
+    success: getPokemon
+  })
+}
+
+// =================== render to DOM ===================== //
+function renderPokemon(pokemonCollection) {
+  const pokemonArray = pokemonCollection.pokemon
+  pokemonArray.forEach(pokemon => {
+    $(".list-group").append(`
+      <div class='list-item'>
+        <button class='btn btn-info btn-sm btn-success' value=${pokemon._id}>Save</button>
+        <button class='btn btn-info btn-sm btn-edit' value=${pokemon._id}>Edit</button>
+        <input class='input-edit'/>
+        <p class='pokemon-info'>${pokemon.name}, ${pokemon.pokedex}, ${pokemon.evolves_from}</p>
+        <button class='btn btn-danger btn-sm btn-delete' value=${pokemon._id}>Delete</button>
+      </div>
+    `)
+  })
+}
+
+// =================== Event Listeners ===================== //
 function editButtonEventListener() {
   $(document).on('click', '.btn-edit', function(event) {
     let pokemonInfo = $(this.parentNode).find('p')
@@ -32,6 +83,7 @@ function editButtonEventListener() {
 function deleteButtonEventListener() {
   $(document).on('click', '.btn-delete', function() {
     $(this.parentNode).remove()
+    deletePokemon($(this).attr('value'))
   })
 }
 
@@ -45,31 +97,18 @@ function saveEditEventListener() {
     $(this).hide()
     p.show()
     $(this.parentNode.children[1]).show()
+    updatePokemon($(this).attr('value'), updatedInfo)
   })
 }
 
-
-
-// ajax call to obtain pokemon
-function getPokemon() {
-  $.ajax({
-    method: 'GET',
-    url: `${baseURL}/pokemon`,
-    success: renderPokemon
-  })
-}
-// render pokemon
-function renderPokemon(pokemonCollection) {
-  const pokemonArray = pokemonCollection.pokemon
-  pokemonArray.forEach(pokemon => {
-    $(".list-group").append(`
-      <div class='list-item'>
-        <button class='btn btn-info btn-sm btn-success' value=${pokemon._id}>Save</button>
-        <button class='btn btn-info btn-sm btn-edit' value=${pokemon._id}>Edit</button>
-        <input class='input-edit'/>
-        <p class='pokemon-info'>${pokemon.name}, ${pokemon.pokedex}, ${pokemon.evolves_from}</p>
-        <button class='btn btn-danger btn-sm btn-delete' value=${pokemon._id}>Delete</button>
-      </div>
-    `)
+function addPokemonEventListener() {
+  $(document).on('click', '.add-pokemon-btn', function() {
+    const submittedPokemon = {
+      name: $('.submit-name').val(),
+      pokedex: $('.submit-pokedex').val(),
+      evolves_from: $('.submit-evolves').val(),
+      image: `https://img.pokemondb.net/artwork/${$('.submit-name').val().toLowerCase()}.jpg`
+    }
+    createPokemon(submittedPokemon)
   })
 }
