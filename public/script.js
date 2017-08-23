@@ -24,7 +24,6 @@ function getPokemon() {
 }
 
 function updatePokemon(id, pokeinfo) {
-  console.log('from update', pokeinfo);
   $.ajax({
     method: 'PUT',
     url: `${baseURL}/pokemon/${id}`,
@@ -37,7 +36,7 @@ function deletePokemon(id) {
   $.ajax({
     method: 'DELETE',
     url: `${baseURL}/pokemon/${id}`,
-    success: getPokemon
+    success: getPokemon``
   })
 }
 
@@ -80,7 +79,7 @@ function deleteButtonEventListener() {
   })
 }
 
-function saveEditEventListener() {
+function saveUpdateButtonEventListener() {
   $(document).on('click', '.btn-success', function() {
     const input = $(this).siblings('input')
     const pokemonInfo = $(this).siblings('p')
@@ -102,7 +101,7 @@ function saveEditEventListener() {
   })
 }
 
-function addPokemonEventListener() {
+function submitNewPokemonEventListener() {
   $(document).on('click', '.add-pokemon-btn', function() {
     const submittedPokemon = {
       name: $('.submit-name').val(),
@@ -115,7 +114,7 @@ function addPokemonEventListener() {
   })
 }
 
-function displayImgListener() {
+function displayImgEventListener() {
   $(document).on('mouseover', '.pokemon-info', function() {
       const arrayInfo = this.innerHTML.split(',')
       $('.pokemon-img').attr('src',`https://img.pokemondb.net/artwork/${arrayInfo[0].toLowerCase()}.jpg`)
@@ -126,9 +125,9 @@ function displayImgListener() {
 function setEventListeners() {
   editButtonEventListener()
   deleteButtonEventListener()
-  saveEditEventListener()
-  addPokemonEventListener()
-  displayImgListener()
+  saveUpdateButtonEventListener()
+  submitNewPokemonEventListener()
+  displayImgEventListener()
 }
 
 // ======= helper function ==== //
