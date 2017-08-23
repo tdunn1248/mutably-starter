@@ -1,7 +1,7 @@
 const baseURL = 'https://mutably.herokuapp.com'
 
 $(document).ready(function() {
-  getPokemon()
+  readPokemon()
   setEventListeners()
 })
 
@@ -11,11 +11,11 @@ function createPokemon(pokemon) {
     method: 'POST',
     url: `${baseURL}/pokemon`,
     data: pokemon,
-    success: getPokemon
+    success: readPokemon
   })
 }
 
-function getPokemon() {
+function readPokemon() {
   $.ajax({
     method: 'GET',
     url: `${baseURL}/pokemon`,
@@ -28,7 +28,7 @@ function updatePokemon(id, pokeinfo) {
     method: 'PUT',
     url: `${baseURL}/pokemon/${id}`,
     data: pokeinfo,
-    success: getPokemon
+    success: readPokemon
   })
 }
 
@@ -36,7 +36,7 @@ function deletePokemon(id) {
   $.ajax({
     method: 'DELETE',
     url: `${baseURL}/pokemon/${id}`,
-    success: getPokemon``
+    success: readPokemon``
   })
 }
 
