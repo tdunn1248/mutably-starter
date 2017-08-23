@@ -1,18 +1,8 @@
 const baseURL = 'https://mutably.herokuapp.com'
-const saveBtn = document.createElement('button')
-saveBtn.classList.add('btn-success')
-saveBtn.classList.add('btn')
-saveBtn.classList.add('btn-sm')
-saveBtn.innerHTML = 'Save'
 
 $(document).ready(function() {
-
   getPokemon()
-  
-  editButtonEventListener()
-  deleteButtonEventListener()
-  saveEditEventListener()
-  addPokemonEventListener()
+  setEventListeners()
 })
 
 // =================== ajax calls ===================== //
@@ -34,10 +24,11 @@ function getPokemon() {
 }
 
 function updatePokemon(id, pokeinfo) {
+  console.log('from update', pokeinfo);
   $.ajax({
     method: 'PUT',
     url: `${baseURL}/pokemon/${id}`,
-    data: JSON.stringify(pokeinfo),
+    data: pokeinfo,
     success: getPokemon
   })
 }
@@ -58,8 +49,11 @@ function renderPokemon(pokemonCollection) {
       <div class='list-item'>
         <button class='btn btn-info btn-sm btn-success' value=${pokemon._id}>Save</button>
         <button class='btn btn-info btn-sm btn-edit' value=${pokemon._id}>Edit</button>
-        <input class='input-edit'/>
+        <input class='input-edit' type='text'/>
         <p class='pokemon-info'>${pokemon.name}, ${pokemon.pokedex}, ${pokemon.evolves_from}</p>
+        <div class='modal'>
+          <img class= 'pokemon-img' src='' alt="">
+        </div>
         <button class='btn btn-danger btn-sm btn-delete' value=${pokemon._id}>Delete</button>
       </div>
     `)
@@ -89,14 +83,22 @@ function deleteButtonEventListener() {
 function saveEditEventListener() {
   $(document).on('click', '.btn-success', function() {
     const input = $(this).siblings('input')
-    const p = $(this).siblings('p')
-    const updatedInfo = input.val()
-    p[0].innerHTML = updatedInfo
+    const pokemonInfo = $(this).siblings('p')
+    const inputValue = input.val()
+    const pieces = inputValue.split(',')
+    const newPokemon = {
+      id: $(this).attr('value'),
+      name: pieces[0],
+      pokedex: pieces[1],
+      evolves_from: pieces[2],
+      image: ''
+    }
+    pokemonInfo[0].innerHTML = inputValue
     input.hide()
     $(this).hide()
-    p.show()
+    pokemonInfo.show()
     $(this.parentNode.children[1]).show()
-    updatePokemon($(this).attr('value'), updatedInfo)
+    updatePokemon(newPokemon.id, newPokemon)
   })
 }
 
@@ -111,6 +113,22 @@ function addPokemonEventListener() {
     resetInputs()
     createPokemon(submittedPokemon)
   })
+}
+
+function displayImgListener() {
+  $(document).on('mouseover', '.pokemon-info', function() {
+      const arrayInfo = this.innerHTML.split(',')
+      $('.pokemon-img').attr('src',`https://img.pokemondb.net/artwork/${arrayInfo[0].toLowerCase()}.jpg`)
+      $('.modal').show()
+  })
+}
+
+function setEventListeners() {
+  editButtonEventListener()
+  deleteButtonEventListener()
+  saveEditEventListener()
+  addPokemonEventListener()
+  displayImgListener()
 }
 
 // ======= helper function ==== //
