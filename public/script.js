@@ -36,7 +36,7 @@ function deletePokemon(id) {
   $.ajax({
     method: 'DELETE',
     url: `${baseURL}/pokemon/${id}`,
-    success: readPokemon``
+    success: readPokemon
   })
 }
 
