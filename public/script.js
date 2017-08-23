@@ -109,6 +109,13 @@ function addPokemonEventListener() {
       evolves_from: $('.submit-evolves').val(),
       image: `https://img.pokemondb.net/artwork/${$('.submit-name').val().toLowerCase()}.jpg`
     }
+    resetInputs()
     createPokemon(submittedPokemon)
   })
+}
+
+function resetInputs() {
+  $('.submit-name').val('')
+  $('.submit-pokedex').val('')
+  $('.submit-evolves').val('')
 }
