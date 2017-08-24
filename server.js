@@ -12,7 +12,7 @@ app.get('/', (request, response) => {
   response.render('index')
 })
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3005
 app.listen(port, () => {
   console.log(`http://localhost:${port}`)
 })
