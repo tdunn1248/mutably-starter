@@ -2,14 +2,10 @@ const baseURL = 'https://mutably.herokuapp.com'
 
 $(document).ready(function() {
   DATA.readPokemon()
-  UI.editButtonEventListener()
-  UI.deleteButtonEventListener()
-  UI.saveUpdateButtonEventListener()
-  UI.submitNewPokemonEventListener()
-  UI.displayImgEventListener()
+  UI.eventListeners()
 })
 
-var UI = {
+const UI = {
   editButtonEventListener: function() {
     $(document).on('click', '.btn-edit', function() {
       ELEMENT.replaceWithInputAndSaveBtn(this)
@@ -35,10 +31,17 @@ var UI = {
     $(document).on('mouseover', '.pokemon-info', function() {
       ELEMENT.showPokemonImg(this)
     })
+  },
+  eventListeners: function() {
+    UI.editButtonEventListener()
+    UI.deleteButtonEventListener()
+    UI.saveUpdateButtonEventListener()
+    UI.submitNewPokemonEventListener()
+    UI.displayImgEventListener()
   }
 }
 
-var ELEMENT = {
+const ELEMENT = {
   submittedPokemon: function() {
     const submittedPokemon = {
       name: $('.submit-name').val(),
@@ -109,7 +112,7 @@ var ELEMENT = {
   }
 }
 
-var DATA = {
+const DATA = {
   createPokemon: function(pokemon) {
     $.ajax({
       method: 'POST',
