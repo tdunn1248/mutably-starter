@@ -1,7 +1,7 @@
 const baseURL = 'https://mutably.herokuapp.com'
 
 $(document).ready(function() {
-  DATA.readPokemon()
+  POKEMON.catchEm()
   UI.eventListeners()
 })
 
@@ -49,7 +49,7 @@ const ELEMENT = {
       evolves_from: $('.submit-evolves').val(),
       image: `https://img.pokemondb.net/artwork/${$('.submit-name').val().toLowerCase()}.jpg`
     }
-    DATA.createPokemon(submittedPokemon)
+    POKEMON.createPokemon(submittedPokemon)
   },
   replaceWithInputAndSaveBtn: function(buttonClicked) {
     let pokemonInfo = $(buttonClicked.parentNode).find('p')
@@ -62,7 +62,7 @@ const ELEMENT = {
   },
   deletePokemonListItem: function(buttonClicked) {
     $(buttonClicked.parentNode).remove()
-    DATA.deletePokemon($(buttonClicked).attr('value'))
+    POKEMON.deletePokemon($(buttonClicked).attr('value'))
   },
   grabUpdatedInfo: function(buttonClicked) {
     const input = $(buttonClicked).siblings('input')
@@ -81,7 +81,7 @@ const ELEMENT = {
     $(buttonClicked).hide()
     pokemonInfo.show()
     $(buttonClicked.parentNode.children[1]).show()
-    DATA.updatePokemon(newPokemon.id, newPokemon)
+    POKEMON.updatePokemon(newPokemon.id, newPokemon)
   },
   renderPokemon: function(pokemonCollection) {
     const pokemonArray = pokemonCollection.pokemon
@@ -112,20 +112,20 @@ const ELEMENT = {
   }
 }
 
-const DATA = {
+const POKEMON = {
+  catchEm: function() {
+    $.ajax({
+      method: 'GET',
+      url: `${baseURL}/pokemon`,
+      success: ELEMENT.renderPokemon
+    })
+  },
   createPokemon: function(pokemon) {
     $.ajax({
       method: 'POST',
       url: `${baseURL}/pokemon`,
       data: pokemon,
-      success: DATA.readPokemon
-    })
-  },
-  readPokemon: function() {
-    $.ajax({
-      method: 'GET',
-      url: `${baseURL}/pokemon`,
-      success: ELEMENT.renderPokemon
+      success: POKEMON.catchEm
     })
   },
   updatePokemon: function(id, pokeinfo) {
@@ -133,14 +133,14 @@ const DATA = {
       method: 'PUT',
       url: `${baseURL}/pokemon/${id}`,
       data: pokeinfo,
-      success: DATA.readPokemon
+      success: POKEMON.catchEm
     })
   },
   deletePokemon: function(id) {
     $.ajax({
       method: 'DELETE',
       url: `${baseURL}/pokemon/${id}`,
-      success: DATA.readPokemon
+      success: POKEMON.catchEm
     })
   }
 }
