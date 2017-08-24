@@ -49,7 +49,7 @@ const ELEMENT = {
       evolves_from: $('.submit-evolves').val(),
       image: `https://img.pokemondb.net/artwork/${$('.submit-name').val().toLowerCase()}.jpg`
     }
-    POKEMON.createPokemon(submittedPokemon)
+    POKEMON.create(submittedPokemon)
   },
   replaceWithInputAndSaveBtn: function(buttonClicked) {
     let pokemonInfo = $(buttonClicked.parentNode).find('p')
@@ -62,7 +62,7 @@ const ELEMENT = {
   },
   deletePokemonListItem: function(buttonClicked) {
     $(buttonClicked.parentNode).remove()
-    POKEMON.deletePokemon($(buttonClicked).attr('value'))
+    POKEMON.delete($(buttonClicked).attr('value'))
   },
   grabUpdatedInfo: function(buttonClicked) {
     const input = $(buttonClicked).siblings('input')
@@ -81,7 +81,7 @@ const ELEMENT = {
     $(buttonClicked).hide()
     pokemonInfo.show()
     $(buttonClicked.parentNode.children[1]).show()
-    POKEMON.updatePokemon(newPokemon.id, newPokemon)
+    POKEMON.update(newPokemon.id, newPokemon)
   },
   renderPokemon: function(pokemonCollection) {
     const pokemonArray = pokemonCollection.pokemon
@@ -120,7 +120,7 @@ const POKEMON = {
       success: ELEMENT.renderPokemon
     })
   },
-  createPokemon: function(pokemon) {
+  create: function(pokemon) {
     $.ajax({
       method: 'POST',
       url: `${baseURL}/pokemon`,
@@ -128,7 +128,7 @@ const POKEMON = {
       success: POKEMON.catchEm
     })
   },
-  updatePokemon: function(id, pokeinfo) {
+  update: function(id, pokeinfo) {
     $.ajax({
       method: 'PUT',
       url: `${baseURL}/pokemon/${id}`,
@@ -136,7 +136,7 @@ const POKEMON = {
       success: POKEMON.catchEm
     })
   },
-  deletePokemon: function(id) {
+  delete: function(id) {
     $.ajax({
       method: 'DELETE',
       url: `${baseURL}/pokemon/${id}`,
