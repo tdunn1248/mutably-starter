@@ -12,7 +12,7 @@ $(document).ready(function() {
 var UI = {
   editButtonEventListener: function() {
     $(document).on('click', '.btn-edit', function() {
-      ELEMENT.editPokemonListItem(this)
+      ELEMENT.replaceWithInputAndSaveBtn(this)
     })
   },
   deleteButtonEventListener: function() {
@@ -22,7 +22,7 @@ var UI = {
   },
   saveUpdateButtonEventListener: function() {
     $(document).on('click', '.btn-success', function() {
-      ELEMENT.toggleEditButton(this)
+      ELEMENT.grabUpdatedInfo(this)
     })
   },
   submitNewPokemonEventListener: function() {
@@ -48,7 +48,7 @@ var ELEMENT = {
     }
     DATA.createPokemon(submittedPokemon)
   },
-  editPokemonListItem: function(buttonClicked) {
+  replaceWithInputAndSaveBtn: function(buttonClicked) {
     let pokemonInfo = $(buttonClicked.parentNode).find('p')
     let input = $(buttonClicked.parentNode).find('input')
     $(buttonClicked).hide()
@@ -61,7 +61,7 @@ var ELEMENT = {
     $(buttonClicked.parentNode).remove()
     DATA.deletePokemon($(buttonClicked).attr('value'))
   },
-  toggleEditButton: function(buttonClicked) {
+  grabUpdatedInfo: function(buttonClicked) {
     const input = $(buttonClicked).siblings('input')
     const pokemonInfo = $(buttonClicked).siblings('p')
     const inputValue = input.val()
