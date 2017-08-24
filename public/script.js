@@ -6,74 +6,80 @@ $(document).ready(function() {
   UI.deleteButtonEventListener()
   UI.saveUpdateButtonEventListener()
   UI.submitNewPokemonEventListener()
+  UI.displayImgEventListener()
 })
 
 var UI = {
   editButtonEventListener: function() {
-    $(document).on('click', '.btn-edit', function(event) {
-      let pokemonInfo = $(this.parentNode).find('p')
-      let input = $(this.parentNode).find('input')
-      $(this).hide()
-      $(this.parentNode.children[0]).show()
-      pokemonInfo.hide()
-      input.show()
-      $(this.parentNode).find('input').attr('placeholder', pokemonInfo[0].innerHTML )
+    $(document).on('click', '.btn-edit', function() {
+      ELEMENT.editPokemonListItem(this)
     })
   },
   deleteButtonEventListener: function() {
     $(document).on('click', '.btn-delete', function() {
-      $(this.parentNode).remove()
-      DATA.deletePokemon($(this).attr('value'))
+      ELEMENT.deletePokemonListItem(this)
     })
   },
   saveUpdateButtonEventListener: function() {
     $(document).on('click', '.btn-success', function() {
-      const input = $(this).siblings('input')
-      const pokemonInfo = $(this).siblings('p')
-      const inputValue = input.val()
-      const pieces = inputValue.split(',')
-      const newPokemon = {
-        id: $(this).attr('value'),
-        name: pieces[0],
-        pokedex: pieces[1],
-        evolves_from: pieces[2],
-        image: ''
-      }
-      pokemonInfo[0].innerHTML = inputValue
-      input.hide()
-      $(this).hide()
-      pokemonInfo.show()
-      $(this.parentNode.children[1]).show()
-      DATA.updatePokemon(newPokemon.id, newPokemon)
+      ELEMENT.toggleEditButton(this)
     })
   },
   submitNewPokemonEventListener: function() {
     $(document).on('click', '.add-pokemon-btn', function() {
-      const submittedPokemon = {
-        name: $('.submit-name').val(),
-        pokedex: $('.submit-pokedex').val(),
-        evolves_from: $('.submit-evolves').val(),
-        image: `https://img.pokemondb.net/artwork/${$('.submit-name').val().toLowerCase()}.jpg`
-      }
-      UI.resetInputs()
-      DATA.createPokemon(submittedPokemon)
+      ELEMENT.submittedPokemon()
+      ELEMENT.resetInputs()
     })
   },
   displayImgEventListener: function() {
     $(document).on('mouseover', '.pokemon-info', function() {
-        const arrayInfo = this.innerHTML.split(',')
-        $('.pokemon-img').attr('src',`https://img.pokemondb.net/artwork/${arrayInfo[0].toLowerCase()}.jpg`)
-        $('.modal').show()
+      ELEMENT.showPokemonImg(this)
     })
-  },
-  resetInputs: function() {
-    $('.submit-name').val('')
-    $('.submit-pokedex').val('')
-    $('.submit-evolves').val('')
   }
 }
 
 var ELEMENT = {
+  submittedPokemon: function() {
+    const submittedPokemon = {
+      name: $('.submit-name').val(),
+      pokedex: $('.submit-pokedex').val(),
+      evolves_from: $('.submit-evolves').val(),
+      image: `https://img.pokemondb.net/artwork/${$('.submit-name').val().toLowerCase()}.jpg`
+    }
+    DATA.createPokemon(submittedPokemon)
+  },
+  editPokemonListItem: function(buttonClicked) {
+    let pokemonInfo = $(buttonClicked.parentNode).find('p')
+    let input = $(buttonClicked.parentNode).find('input')
+    $(buttonClicked).hide()
+    $(buttonClicked.parentNode.children[0]).show()
+    pokemonInfo.hide()
+    input.show()
+    $(buttonClicked.parentNode).find('input').attr('placeholder', pokemonInfo[0].innerHTML )
+  },
+  deletePokemonListItem: function(buttonClicked) {
+    $(buttonClicked.parentNode).remove()
+    DATA.deletePokemon($(buttonClicked).attr('value'))
+  },
+  toggleEditButton: function(buttonClicked) {
+    const input = $(buttonClicked).siblings('input')
+    const pokemonInfo = $(buttonClicked).siblings('p')
+    const inputValue = input.val()
+    const pieces = inputValue.split(',')
+    const newPokemon = {
+      id: $(buttonClicked).attr('value'),
+      name: pieces[0],
+      pokedex: pieces[1],
+      evolves_from: pieces[2],
+      image: ''
+    }
+    pokemonInfo[0].innerHTML = inputValue
+    input.hide()
+    $(buttonClicked).hide()
+    pokemonInfo.show()
+    $(buttonClicked.parentNode.children[1]).show()
+    DATA.updatePokemon(newPokemon.id, newPokemon)
+  },
   renderPokemon: function(pokemonCollection) {
     const pokemonArray = pokemonCollection.pokemon
     pokemonArray.forEach(pokemon => {
@@ -90,6 +96,16 @@ var ELEMENT = {
         </div>
       `)
     })
+  },
+  resetInputs: function() {
+    $('.submit-name').val('')
+    $('.submit-pokedex').val('')
+    $('.submit-evolves').val('')
+  },
+  showPokemonImg: function(pokemonSelected) {
+    const arrayInfo = pokemonSelected.innerHTML.split(',')
+    $('.pokemon-img').attr('src',`https://img.pokemondb.net/artwork/${arrayInfo[0].toLowerCase()}.jpg`)
+    $('.modal').show()
   }
 }
 
