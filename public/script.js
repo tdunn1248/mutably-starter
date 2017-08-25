@@ -26,6 +26,7 @@ const UI = {
   },
   submitNewPokemon() {
     ELEMENT.newPokedom()
+    ELEMENT.resetInputs()
   },
   editPokemon() {
     ELEMENT.editPokemon(this)
@@ -58,7 +59,6 @@ const DATA = {
     })
   },
   update(id, pokemonInfo) {
-    console.log('from data update->',id);
     $.ajax({
       method: 'PUT',
       url: `${baseURL}/pokemon/${id}`,
@@ -83,7 +83,6 @@ const ELEMENT = {
       evolves_from: $('.submit-evolves').val(),
       image: `https://img.pokemondb.net/artwork/${$('.submit-name').val().toLowerCase()}.jpg`
     }
-    ELEMENT.resetInputs()
     CONTROLLER().createPokedom(newPokemon)
   },
   displayImg(selectedPokemon) {
@@ -99,7 +98,7 @@ const ELEMENT = {
     $(inputField).attr('placeholder', placeholder)
     inputField.show()
     const saveBtn = $(selectedPokemon.parentNode)[0].childNodes[1]
-    saveBtn.style.display = 'block'
+    $(saveBtn).show()
   },
   submitEdit(selectedPokemon) {
     const id = $(selectedPokemon).attr('value')
@@ -116,6 +115,8 @@ const ELEMENT = {
     pokemonInfo[0].innerHTML = inputValue
     $(selectedPokemon).siblings('input').hide()
     pokemonInfo.show()
+    $(selectedPokemon).hide()
+    $(selectedPokemon.nextElementSibling).show()
     CONTROLLER().updatedPokemon(id, updatedPokemonInfo)
   },
   deletePokemon(selectedPokemon) {
