@@ -86,7 +86,7 @@ const ELEMENT = {
     CONTROLLER().createPokedom(newPokemon)
   },
   displayImg(selectedPokemon) {
-    const name = $(selectedPokemon).attr('value').toLowerCase() 
+    const name = $(selectedPokemon).attr('value').toLowerCase()
     $('.pokemon-img').attr('src', `https://img.pokemondb.net/artwork/${name}.jpg`)
     $('.pokemon-img').show()
   },
@@ -96,8 +96,8 @@ const ELEMENT = {
     $(selectedPokemon).hide()
     let inputField = $(selectedPokemon.nextElementSibling.nextElementSibling)
     $(inputField).attr('placeholder', placeholder)
-    inputField.show()
     const saveBtn = $(selectedPokemon.parentNode)[0].childNodes[1]
+    inputField.show()
     $(saveBtn).show()
   },
   submitEdit(selectedPokemon) {
