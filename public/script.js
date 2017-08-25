@@ -86,7 +86,7 @@ const ELEMENT = {
     CONTROLLER().createPokedom(newPokemon)
   },
   displayImg(selectedPokemon) {
-    const name = $(selectedPokemon).attr('value').toLowerCase() // different syntax
+    const name = $(selectedPokemon).attr('value').toLowerCase() 
     $('.pokemon-img').attr('src', `https://img.pokemondb.net/artwork/${name}.jpg`)
     $('.pokemon-img').show()
   },
