@@ -1,146 +1,146 @@
 const baseURL = 'https://mutably.herokuapp.com'
 
 $(document).ready(function() {
-  POKEMON.catchEm()
-  UI.eventListeners()
+  CONTROLLER().readData()
+  UI.addEventListeners()
 })
 
+function CONTROLLER() {
+  return {
+    readData: DATA.read,
+    createPokedom: DATA.create,
+    updatedPokemon: DATA.update,
+    deletePokemon: DATA.delete,
+    newPokemon: ELEMENT.newPokedom,
+    renderData: ELEMENT.renderData
+  }
+}
+
 const UI = {
-  editButtonEventListener: function() {
-    $(document).on('click', '.btn-edit', function() {
-      ELEMENT.replaceWithInputAndSaveBtn(this)
+  addEventListeners() {
+    $(document).on('click', '.add-pokemon-btn', UI.submitNewPokemon)
+    $(document).on('click', '.btn-edit', UI.editPokemon)
+    $(document).on('click', '.btn-success', UI.saveUpdate)
+    $(document).on('click', '.btn-delete', UI.deletePokemon)
+    $(document).on('mouseover', '.pokemon-info', UI.getImg)
+  },
+  submitNewPokemon() {
+    ELEMENT.newPokedom()
+    ELEMENT.resetInputs()
+  },
+  editPokemon() {
+    ELEMENT.editPokemon(this)
+  },
+  deletePokemon() {
+    ELEMENT.deletePokemon(this)
+  },
+  getImg() {
+    ELEMENT.displayImg(this)
+  },
+  saveUpdate() {
+    ELEMENT.submitEdit(this)
+  }
+}
+
+const DATA = {
+  read() {
+    $.ajax({
+      method: 'GET',
+      url: `${baseURL}/pokemon`,
+      success: CONTROLLER().renderData
     })
   },
-  deleteButtonEventListener: function() {
-    $(document).on('click', '.btn-delete', function() {
-      ELEMENT.deletePokemonListItem(this)
+  create(pokemonInfo) {
+    $.ajax({
+      method: 'POST',
+      url: `${baseURL}/pokemon`,
+      data: pokemonInfo,
+      success: CONTROLLER().readData
     })
   },
-  saveUpdateButtonEventListener: function() {
-    $(document).on('click', '.btn-success', function() {
-      ELEMENT.grabUpdatedInfo(this)
+  update(id, pokemonInfo) {
+    $.ajax({
+      method: 'PUT',
+      url: `${baseURL}/pokemon/${id}`,
+      data: pokemonInfo,
+      success: CONTROLLER().readData
     })
   },
-  submitNewPokemonEventListener: function() {
-    $(document).on('click', '.add-pokemon-btn', function() {
-      ELEMENT.submittedPokemon()
-      ELEMENT.resetInputs()
+  delete(id) {
+    $.ajax({
+      method: 'DELETE',
+      url: `${baseURL}/pokemon/${id}`,
+      success: CONTROLLER().readData
     })
-  },
-  displayImgEventListener: function() {
-    $(document).on('mouseover', '.pokemon-info', function() {
-      ELEMENT.showPokemonImg(this)
-    })
-  },
-  eventListeners: function() {
-    UI.editButtonEventListener()
-    UI.deleteButtonEventListener()
-    UI.saveUpdateButtonEventListener()
-    UI.submitNewPokemonEventListener()
-    UI.displayImgEventListener()
   }
 }
 
 const ELEMENT = {
-  submittedPokemon: function() {
-    const submittedPokemon = {
+  newPokedom() {
+    const newPokemon = {
       name: $('.submit-name').val(),
       pokedex: $('.submit-pokedex').val(),
       evolves_from: $('.submit-evolves').val(),
       image: `https://img.pokemondb.net/artwork/${$('.submit-name').val().toLowerCase()}.jpg`
     }
-    POKEMON.create(submittedPokemon)
+    CONTROLLER().createPokedom(newPokemon)
   },
-  replaceWithInputAndSaveBtn: function(buttonClicked) {
-    let pokemonInfo = $(buttonClicked.parentNode).find('p')
-    let input = $(buttonClicked.parentNode).find('input')
-    $(buttonClicked).hide()
-    $(buttonClicked.parentNode.children[0]).show()
-    pokemonInfo.hide()
-    input.show()
-    $(buttonClicked.parentNode).find('input').attr('placeholder', pokemonInfo[0].innerHTML )
+  displayImg(selectedPokemon) {
+    const name = $(selectedPokemon).attr('value').toLowerCase()
+    $('.pokemon-img').attr('src', `https://img.pokemondb.net/artwork/${name}.jpg`)
+    $('.pokemon-img').show()
   },
-  deletePokemonListItem: function(buttonClicked) {
-    $(buttonClicked.parentNode).remove()
-    POKEMON.delete($(buttonClicked).attr('value'))
+  editPokemon(selectedPokemon) {
+    const placeholder = $(selectedPokemon.nextElementSibling)[0].innerHTML.split(',')
+    $(selectedPokemon.nextElementSibling).hide()
+    $(selectedPokemon).hide()
+    let inputField = $(selectedPokemon.nextElementSibling.nextElementSibling)
+    $(inputField).attr('placeholder', placeholder)
+    const saveBtn = $(selectedPokemon.parentNode)[0].childNodes[1]
+    inputField.show()
+    $(saveBtn).show()
   },
-  grabUpdatedInfo: function(buttonClicked) {
-    const input = $(buttonClicked).siblings('input')
-    const pokemonInfo = $(buttonClicked).siblings('p')
-    const inputValue = input.val()
-    const pieces = inputValue.split(',')
-    const newPokemon = {
-      id: $(buttonClicked).attr('value'),
-      name: pieces[0],
-      pokedex: pieces[1],
-      evolves_from: pieces[2],
+  submitEdit(selectedPokemon) {
+    const id = $(selectedPokemon).attr('value')
+    const inputValue = ($(selectedPokemon).siblings('input')[0].value)
+    const pokemonInfo = $(selectedPokemon).siblings('p')
+    const info = inputValue.split(',')
+    const updatedPokemonInfo = {
+      id: $(selectedPokemon).attr('value'),
+      name: info[0],
+      pokedex: info[1],
+      evolves_from: info[2],
       image: ''
     }
     pokemonInfo[0].innerHTML = inputValue
-    input.hide()
-    $(buttonClicked).hide()
+    $(selectedPokemon).siblings('input').hide()
     pokemonInfo.show()
-    $(buttonClicked.parentNode.children[1]).show()
-    POKEMON.update(newPokemon.id, newPokemon)
+    $(selectedPokemon).hide()
+    $(selectedPokemon.nextElementSibling).show()
+    CONTROLLER().updatedPokemon(id, updatedPokemonInfo)
   },
-  renderPokemon: function(pokemonCollection) {
+  deletePokemon(selectedPokemon) {
+    const id = $(selectedPokemon).attr('value')
+    $(selectedPokemon.parentNode).remove()
+    CONTROLLER().deletePokemon(id)
+  },
+  resetInputs() {
+  $('.submit-name').val('')
+  $('.submit-pokedex').val('')
+  $('.submit-evolves').val('')
+  },
+  renderData(pokemonCollection) {
     const pokemonArray = pokemonCollection.pokemon
     pokemonArray.forEach(pokemon => {
       $(".list-group").append(`
         <div class='list-item'>
           <button class='btn btn-info btn-sm btn-success' value=${pokemon._id}>Save</button>
           <button class='btn btn-info btn-sm btn-edit' value=${pokemon._id}>Edit</button>
+          <p class='pokemon-info' value=${pokemon.name}>${pokemon.name}, ${pokemon.pokedex}, ${pokemon.evolves_from}</p>
           <input class='input-edit' type='text'/>
-          <p class='pokemon-info'>${pokemon.name}, ${pokemon.pokedex}, ${pokemon.evolves_from}</p>
-          <div class='modal'>
-            <img class= 'pokemon-img' src='' alt="">
-          </div>
           <button class='btn btn-danger btn-sm btn-delete' value=${pokemon._id}>Delete</button>
         </div>
       `)
-    })
-  },
-  resetInputs: function() {
-    $('.submit-name').val('')
-    $('.submit-pokedex').val('')
-    $('.submit-evolves').val('')
-  },
-  showPokemonImg: function(pokemonSelected) {
-    const arrayInfo = pokemonSelected.innerHTML.split(',')
-    $('.pokemon-img').attr('src',`https://img.pokemondb.net/artwork/${arrayInfo[0].toLowerCase()}.jpg`)
-    $('.modal').show()
-  }
-}
-
-const POKEMON = {
-  catchEm: function() {
-    $.ajax({
-      method: 'GET',
-      url: `${baseURL}/pokemon`,
-      success: ELEMENT.renderPokemon
-    })
-  },
-  create: function(pokemon) {
-    $.ajax({
-      method: 'POST',
-      url: `${baseURL}/pokemon`,
-      data: pokemon,
-      success: POKEMON.catchEm
-    })
-  },
-  update: function(id, pokeinfo) {
-    $.ajax({
-      method: 'PUT',
-      url: `${baseURL}/pokemon/${id}`,
-      data: pokeinfo,
-      success: POKEMON.catchEm
-    })
-  },
-  delete: function(id) {
-    $.ajax({
-      method: 'DELETE',
-      url: `${baseURL}/pokemon/${id}`,
-      success: POKEMON.catchEm
     })
   }
 }

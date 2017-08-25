@@ -45,16 +45,16 @@
 .modal {
   display: none;
   text-align: center;
-  margin-top: auto;
-  margin-bottom: auto;
-  height: 250px;
-  width: 250px;
-  left: 8em;
+
 }
 
 .pokemon-img {
-  height: auto;
-  width: auto;
+  display: none;
+  position: absolute;
+  height: 250px;
+  width: 250px;
+  top: 5em;
+  left: 4em;
 }
 
 .input-edit {
