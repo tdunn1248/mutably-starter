@@ -133,14 +133,14 @@ const ELEMENT = {
     const pokemonArray = pokemonCollection.pokemon
     pokemonArray.forEach(pokemon => {
       $(".list-group").append(`
-        <div class='list-item'>
-          <button class='btn btn-info btn-sm btn-success' value=${pokemon._id}>Save</button>
-          <button class='btn btn-info btn-sm btn-edit' value=${pokemon._id}>Edit</button>
-          <p class='pokemon-info' value=${pokemon.name}>${pokemon.name}, ${pokemon.pokedex}, ${pokemon.evolves_from}</p>
-          <input class='input-edit' type='text'/>
-          <button class='btn btn-danger btn-sm btn-delete' value=${pokemon._id}>Delete</button>
-        </div>
-          `)
-        })
-      }
-    }
+                              <div class='list-item'>
+                                <button class='btn btn-info btn-sm btn-success' value=${pokemon._id}>Save</button>
+                                <button class='btn btn-info btn-sm btn-edit' value=${pokemon._id}>Edit</button>
+                                <p class='pokemon-info' value=${pokemon.name}>${pokemon.name}, ${pokemon.pokedex}, ${pokemon.evolves_from}</p>
+                                <input class='input-edit' type='text'/>
+                                <button class='btn btn-danger btn-sm btn-delete' value=${pokemon._id}>Delete</button>
+                              </div>
+      `)
+    })
+  }
+}
