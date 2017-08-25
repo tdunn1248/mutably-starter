@@ -120,7 +120,7 @@ const ELEMENT = {
     CONTROLLER().updatedPokemon(id, updatedPokemonInfo)
   },
   deletePokemon(selectedPokemon) {
-    const id = $(selectedPokemon).attr('value') // different syntax
+    const id = $(selectedPokemon).attr('value')
     $(selectedPokemon.parentNode).remove()
     CONTROLLER().deletePokemon(id)
   },
